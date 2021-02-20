@@ -15,7 +15,7 @@ public interface Token {
 
         private final BaseComponent[] component;
 
-        public ComponentToken(BaseComponent... component) {
+        public ComponentToken(BaseComponent[] component) {
             this.component = component;
         }
 

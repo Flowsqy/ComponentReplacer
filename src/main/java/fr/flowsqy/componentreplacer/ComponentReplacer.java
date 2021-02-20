@@ -1,12 +1,8 @@
 package fr.flowsqy.componentreplacer;
 
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,7 +15,7 @@ public class ComponentReplacer {
         this.tokens = getTokens(original);
     }
 
-    public ComponentReplacer replace(String regex, BaseComponent... components){
+    public ComponentReplacer replace(String regex, BaseComponent[] components){
         tokens = replace(tokens, regex, components);
         return this;
     }
@@ -29,9 +25,9 @@ public class ComponentReplacer {
     }
 
     private static BaseComponent[] getComponent(List<Token> tokens){
-        final ComponentBuilder componentBuilder = new ComponentBuilder();
-        tokens.stream().map(Token::getComponent).forEach(componentBuilder::append);
-        return componentBuilder.create();
+        final List<BaseComponent> components = new ArrayList<>();
+        tokens.stream().map(Token::getComponent).map(Arrays::asList).forEach(components::addAll);
+        return components.toArray(new BaseComponent[]{});
     }
 
     private static List<Token> replace(List<Token> tokens, String regex, BaseComponent[] replacement){
