@@ -12,25 +12,10 @@ public class ComponentReplacer {
 
     public ComponentReplacer(String original) {
         Objects.requireNonNull(original);
-        this.tokens = getTokens(original);
+        this.tokens = new ArrayList<>(Collections.singletonList(new Token.StringToken(original)));
     }
 
-    public ComponentReplacer replace(String regex, BaseComponent[] components){
-        tokens = replace(tokens, regex, components);
-        return this;
-    }
-
-    public BaseComponent[] create(){
-        return getComponent(tokens);
-    }
-
-    private static BaseComponent[] getComponent(List<Token> tokens){
-        final List<BaseComponent> components = new ArrayList<>();
-        tokens.stream().map(Token::getComponent).map(Arrays::asList).forEach(components::addAll);
-        return components.toArray(new BaseComponent[]{});
-    }
-
-    private static List<Token> replace(List<Token> tokens, String regex, BaseComponent[] replacement){
+    public ComponentReplacer replace(String regex, BaseComponent[] replacement){
         final List<Token> outputTokens = new ArrayList<>();
         for(final Token token : tokens){
             if(token.isString()){
@@ -40,10 +25,17 @@ public class ComponentReplacer {
                 outputTokens.add(token);
             }
         }
-        return outputTokens;
+        this.tokens = outputTokens;
+        return this;
     }
 
-    private static List<Token> getTokenReplacement(String input, String regex, BaseComponent[] replacement){
+    public BaseComponent[] create(){
+        final List<BaseComponent> components = new ArrayList<>();
+        tokens.stream().map(Token::getComponent).map(Arrays::asList).forEach(components::addAll);
+        return components.toArray(new BaseComponent[]{});
+    }
+
+    private List<Token> getTokenReplacement(String input, String regex, BaseComponent[] replacement){
         final List<Token> tokens = new ArrayList<>();
         final Matcher matcher = Pattern.compile(regex, Pattern.LITERAL).matcher(input);
         if(matcher.find()){
@@ -65,9 +57,4 @@ public class ComponentReplacer {
         tokens.add(new Token.StringToken(input));
         return tokens;
     }
-
-    private static List<Token> getTokens(String value){
-        return new ArrayList<>(Collections.singletonList(new Token.StringToken(value)));
-    }
-
 }
