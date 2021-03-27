@@ -2,4 +2,4 @@ name: ComponentReplacer
 author: Flowsqy
 version: ${project.version}
 main: fr.flowsqy.componentreplacer.ComponentReplacerPlugin
-api-version: "1.16"
+api-version: "1.13"
