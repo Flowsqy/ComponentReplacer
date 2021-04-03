@@ -15,13 +15,12 @@ public class ComponentReplacer {
         this.tokens = new ArrayList<>(Collections.singletonList(new Token.StringToken(original)));
     }
 
-    public ComponentReplacer replace(String regex, BaseComponent[] replacement){
+    public ComponentReplacer replace(String regex, BaseComponent[] replacement) {
         final List<Token> outputTokens = new ArrayList<>();
-        for(final Token token : tokens){
-            if(token.isString()){
+        for (final Token token : tokens) {
+            if (token.isString()) {
                 outputTokens.addAll(getTokenReplacement(token.getString(), regex, replacement));
-            }
-            else{
+            } else {
                 outputTokens.add(token);
             }
         }
@@ -29,27 +28,27 @@ public class ComponentReplacer {
         return this;
     }
 
-    public BaseComponent[] create(){
+    public BaseComponent[] create() {
         final List<BaseComponent> components = new ArrayList<>();
         tokens.stream().map(Token::getComponent).map(Arrays::asList).forEach(components::addAll);
         return components.toArray(new BaseComponent[]{});
     }
 
-    private List<Token> getTokenReplacement(String input, String regex, BaseComponent[] replacement){
+    private List<Token> getTokenReplacement(String input, String regex, BaseComponent[] replacement) {
         final List<Token> tokens = new ArrayList<>();
         final Matcher matcher = Pattern.compile(regex, Pattern.LITERAL).matcher(input);
-        if(matcher.find()){
+        if (matcher.find()) {
             int cursor = 0;
-            do{
+            do {
                 final String pre = input.substring(cursor, matcher.start());
-                if(!pre.isEmpty()){
+                if (!pre.isEmpty()) {
                     tokens.add(new Token.StringToken(pre));
                 }
                 tokens.add(new Token.ComponentToken(replacement));
                 cursor = matcher.end();
-            }while (matcher.find());
+            } while (matcher.find());
             final String end = input.substring(cursor);
-            if(!end.isEmpty()){
+            if (!end.isEmpty()) {
                 tokens.add(new Token.StringToken(end));
             }
             return tokens;

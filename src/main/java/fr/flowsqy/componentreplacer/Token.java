@@ -11,7 +11,7 @@ public interface Token {
 
     BaseComponent[] getComponent();
 
-    final class ComponentToken implements Token{
+    final class ComponentToken implements Token {
 
         private final BaseComponent[] component;
 
